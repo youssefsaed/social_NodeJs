@@ -1,12 +1,12 @@
 import express from 'express'
 import { dBConnection } from './db/db.connection.js'
-import authRouter from'./src/modules/Auth/auth.routes.js'
+import authRouter from './src/modules/Auth/auth.routes.js'
 import dotenv from 'dotenv'
 import { globalError } from './src/utils/globalError.js'
 import userRouter from './src/modules/users/user.routes.js'
 import postesRouter from './src/modules/postes/post.routes.js'
 import commentRouter from './src/modules/comments/comment.routes.js'
-import cors from'cors'
+import cors from 'cors'
 
 
 
@@ -20,11 +20,11 @@ app.use(cors())
 
 //endPoint
 app.use(express.json())
-app.use(`${BaseUrl}/uploads`,express.static('./uploads'))
+app.use(`${BaseUrl}/uploads`, express.static('./uploads'))
 app.use(`${BaseUrl}`, authRouter)
-app.use(`${BaseUrl}`,userRouter)
-app.use(`${BaseUrl}`,postesRouter)
-app.use(`${BaseUrl}`,commentRouter)
+app.use(`${BaseUrl}`, userRouter)
+app.use(`${BaseUrl}`, postesRouter)
+app.use(`${BaseUrl}`, commentRouter)
 
 
 
@@ -49,6 +49,6 @@ app.use(globalError)
 
 //connection
 dBConnection()
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log(`server is running on port ${port} .......`);
 })
