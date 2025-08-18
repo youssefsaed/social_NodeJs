@@ -36,22 +36,21 @@ export const confirmEmail = errorHanddling(async (req, res, next) => {
     const tokenVerify = new Jwt().verify(token)
     const user = await userModel.findOneAndUpdate({ _id: tokenVerify._id, confirmed: false }, { confirmed: true })
     if (!user) return next(new Error("you already confirme"))
-    return res.redirect(`http://localhost:4200/home`)
-    // return res.status(200).json({ message: "success confirmation" })
+    return res.status(200).json({ message: "success" })
 })
 ////////////////////////////////////////////////////////////////logIn
 export const logIn = errorHanddling(async (req, res, next) => {
     const { Email, password } = req.body
-    const user = await userModel.findOne({ Email})
+    const user = await userModel.findOne({ Email })
     if (!user) return next(new Error("Email not exist"))
-    const confirm = await userModel.findOne({ Email, confirmed: true})
-    if(!confirm) return next(new Error("confirm your email"))
+    const confirm = await userModel.findOne({ Email, confirmed: true })
+    if (!confirm) return next(new Error("confirm your email"))
     const check = new Password(password).compare(user.password)
     if (!check) return next(new Error("Invalid Password"))
     const token = new Jwt({
         payload: { id: user._id }
     }).sign()
-    await userModel.findOneAndUpdate({Email},{isLoggedIn:true})
+    await userModel.findOneAndUpdate({ Email }, { isLoggedIn: true })
     return res.status(200).json({ message: "success", token })
 })
 //////////////////////////////////////////////////////////////forgetPassword
@@ -65,7 +64,7 @@ export const forgetPassword = errorHanddling(async (req, res, next) => {
     const link = `${req.protocol}://${req.headers.host}/social/resetPassword/${payloadCode}`
     const sentEmail = await sendEmail({
         to: Email,
-        html: htmlR(link,otp)
+        html: htmlR(link, otp)
         ,
         subject: "reset password"
     })
@@ -83,11 +82,11 @@ export const resetPassword = errorHanddling(async (req, res, next) => {
     return res.json({ message: "resst password succesfull", user })
 })
 /////////////////////////////////////////////////////////////log out
-export const logOut=errorHanddling(async(req,res,next)=>{
-    const {_id}=req.user
-    const user=await userModel.findByIdAndUpdate(_id,{isLoggedIn:false})
-    if(!user) return next(new Error('fail'))
-    return res.json({message:"logOut"})
+export const logOut = errorHanddling(async (req, res, next) => {
+    const { _id } = req.user
+    const user = await userModel.findByIdAndUpdate(_id, { isLoggedIn: false })
+    if (!user) return next(new Error('fail'))
+    return res.json({ message: "logOut" })
 })
 
 
