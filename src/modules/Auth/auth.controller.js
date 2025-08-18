@@ -9,7 +9,7 @@ import { Password } from "../../utils/password.js";
 
 
 
-////////////////////////////////////////////////////////////signUp
+///////////////////////////////////////////////////////////signUp
 export const signUp = errorHanddling(async (req, res, next) => {
     const { FirstName, LastName, Username, Email, password } = req.body
     const exist = await userModel.findOne({ Email })

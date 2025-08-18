@@ -7,13 +7,13 @@ export const sendEmail = async ({ to = '', html = '', subject = '' }) => {
     secure: false, // true for 465, false for other ports
     service: 'gmail',
     auth: {
-      user: 'youssef.saed.iti@gmail.com', // generated ethereal user
+      user: process.env.EMAIL, // generated ethereal user
       pass: process.env.EMAIL_PASS, // generated ethereal password
     },
   });
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: 'youssef.saed.iti@gmail.com', // sender address
+    from: 'youssefDot', // sender address
     to, // list of receivers
     subject, // Subject line
     // text: "Hello world?", // plain text body
