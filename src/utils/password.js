@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-export const Password = class {
+export class Password  {
     constructor(orignalPass) {
         this.Password = orignalPass
     }

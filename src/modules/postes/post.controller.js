@@ -88,7 +88,6 @@ export const likeAunlike = errorHanddling(async (req, res, next) => {
     const cheackPost = await postModel.findById(id)
     if (!cheackPost) return next(new Error('fail', { cause: 404 }))
     const likeCheck = await postModel.findOne({ likes: { $in: [_id] }, _id: id })
-    console.log(likeCheck);
     if (likeCheck) {
         const post = await postModel.findOneAndUpdate({ _id: id }, {
             $pull: { likes: { $in: [_id] } }
