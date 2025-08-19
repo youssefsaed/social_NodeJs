@@ -41,19 +41,19 @@ export const logIn = async (req, res, next) => {
     const { Email, password } = req.body
     const user = await userModel.findOne({ Email })
     if (!user || !bcrypt.compareSync(password, user.password))
-        return next(new AppError("Invalid Email OR Password ",401))
+        return next(new AppError("Invalid Email OR Password ", 401))
 
-    if(!user.confirmed) return next(new AppError("confirm your email",401))
+    if (!user.confirmed) return next(new AppError("confirm your email", 401))
 
-    await userModel.findOneAndUpdate({Email:user.Email}, { isLoggedIn: true })
-    const token =  Jwt.sign({ id: user._id },process.env.SIGNTURE)
+    await userModel.findOneAndUpdate({ Email: user.Email }, { isLoggedIn: true })
+    const token = Jwt.sign({ id: user._id }, process.env.SIGNTURE)
     return res.status(200).json({ message: "success", token })
 }
 //////////////////////////////////////////////////////////////forgetPassword
 
 export const forgetPassword = async (req, res, next) => {
     const { Email } = req.body
-    const user = await userModel.findOne({ Email })
+    const user = await userModel.findOne({ Email,confirmed:true })
     if (!user) return next(new Error('email not exist'))
     const otp = OtpGenerator()
     const payloadCode = Jwt.sign({ otp, email: user.Email }, process.env.SIGNTURE, { expiresIn: "3m" })
@@ -79,6 +79,7 @@ export const changePassword = async (req, res, next) => {
             const user = await userModel.findOneAndUpdate({ Email: decode.email }, { password: hash })
             return res.json({ message: "success", user })
         }
+        if (err.name === "TokenExpiredError") return next(new AppError("Time Expired", 400))
         return next(err)
     })
 
