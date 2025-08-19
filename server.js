@@ -25,10 +25,9 @@ app.use(`${BaseUrl}`, userRouter)
 app.use(`${BaseUrl}`, postesRouter)
 app.use(`${BaseUrl}`, commentRouter)
 
-app.use('/',(req,res)=>{
-    res.json("Social App Is Runing")
+app.get('/',(req,res)=>{
+    res.json("Social App Is Runing ......")
 })
-
 
 app.all('*', (req, res, next) => {
     next(new Error("invalid url - can't access this endpoint" + req.originalUrl))
