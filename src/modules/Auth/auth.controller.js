@@ -1,22 +1,20 @@
 import { userModel } from "../../../db/models/user.model.js";
 import { sendEmail } from "../../../services/email.js";
-import { errorHanddling } from "../../utils/errorHandling.js";
 import { html } from "../../utils/html.js";
 import { htmlR } from "../../utils/htmlReset.js";
-import { Jwt } from "../../utils/jwt.js";
-import { OTPGenerator } from "../../utils/otp.js";
-import { Password } from "../../utils/password.js";
-
+import { OtpGenerator } from "../../utils/otp.js";
+import AppError from "../../utils/AppError.js";
+import Jwt from "jsonwebtoken";
+import bcrypt from 'bcryptjs'
 
 
 ///////////////////////////////////////////////////////////signUp
-export const signUp = errorHanddling(async (req, res, next) => {
+export const signUp = async (req, res, next) => {
     const { FirstName, LastName, Username, Email, password } = req.body
     const exist = await userModel.findOne({ Email })
-    if (exist) return next(new Error("Email is exist"))
-    const hashedPass = new Password(password).hash()
-    const newUser = new userModel({ FirstName, LastName, Username, Email, password: hashedPass })
-    const token = new Jwt({ payload: { _id: newUser._id } }).sign()
+    if (exist) return next(new AppError("Email is exist", 409))
+    const newUser = new userModel({ FirstName, LastName, Username, Email, password })
+    const token = Jwt.sign({ id: newUser._id }, process.env.SIGNTURE)
     const linkConfirm = `${req.protocol}://${req.headers.host}/social/confirmEmail/${token}`
     const sentEmail = await sendEmail({
         to: newUser.Email,
@@ -28,66 +26,70 @@ export const signUp = errorHanddling(async (req, res, next) => {
         return res.status(201).json({ message: "success" })
     }
     return next(new Error("fail to confirm"))
-})
+}
 
 ///////////////////////////////////////////////////////////////confirm email
-export const confirmEmail = errorHanddling(async (req, res, next) => {
+export const confirmEmail = async (req, res, next) => {
     const { token } = req.params
-    const tokenVerify = new Jwt().verify(token)
-    const user = await userModel.findOneAndUpdate({ _id: tokenVerify._id, confirmed: false }, { confirmed: true })
-    if (!user) return next(new Error("you already confirme"))
+    const decode = Jwt.verify(token, process.env.SIGNTURE)
+    const updated = await userModel.findOneAndUpdate({ _id: decode.id, confirmed: false }, { confirmed: true })
+    if (!updated) return next(new Error("you already confirme"))
     return res.status(200).json({ message: "success" })
-})
+}
 ////////////////////////////////////////////////////////////////logIn
-export const logIn = errorHanddling(async (req, res, next) => {
+export const logIn = async (req, res, next) => {
     const { Email, password } = req.body
     const user = await userModel.findOne({ Email })
-    if (!user) return next(new Error("Email not exist"))
-    const confirm = await userModel.findOne({ Email, confirmed: true })
-    if (!confirm) return next(new Error("confirm your email"))
-    const check = new Password(password).compare(user.password)
-    if (!check) return next(new Error("Invalid Password"))
-    const token = new Jwt({
-        payload: { id: user._id }
-    }).sign()
-    await userModel.findOneAndUpdate({ Email }, { isLoggedIn: true })
+    if (!user || !bcrypt.compareSync(password, user.password))
+        return next(new AppError("Invalid Email OR Password ",401))
+
+    if(!user.confirmed) return next(new AppError("confirm your email",401))
+
+    await userModel.findOneAndUpdate({Email:user.Email}, { isLoggedIn: true })
+    const token =  Jwt.sign({ id: user._id },process.env.SIGNTURE)
     return res.status(200).json({ message: "success", token })
-})
+}
 //////////////////////////////////////////////////////////////forgetPassword
 
-export const forgetPassword = errorHanddling(async (req, res, next) => {
+export const forgetPassword = async (req, res, next) => {
     const { Email } = req.body
     const user = await userModel.findOne({ Email })
     if (!user) return next(new Error('email not exist'))
-    const otp = OTPGenerator()
-    const payloadCode = new Jwt({ payload: { otp, email: user.Email } }).sign()
-    const link = `${req.protocol}://${req.headers.host}/social/resetPassword/${payloadCode}`
+    const otp = OtpGenerator()
+    const payloadCode = Jwt.sign({ otp, email: user.Email }, process.env.SIGNTURE, { expiresIn: "3m" })
     const sentEmail = await sendEmail({
         to: Email,
-        html: htmlR(link, otp)
+        html: htmlR(otp)
         ,
         subject: "reset password"
     })
-    if (sentEmail) return res.json({ message: "success" })
-})
+    if (sentEmail) return res.json({ message: "success", payloadCode })
+}
 //////////////////////////////////////////////////////////////resetPassword
-export const resetPassword = errorHanddling(async (req, res, next) => {
+export const changePassword = async (req, res, next) => {
     const { otp } = req.params
-    const { nPassword } = req.body
+    const { newPassword } = req.body
     const { code } = req.body
-    const codeVerify = new Jwt().verify(otp)
-    if (codeVerify.otp != code) return res.json({ message: "invalid code" })
-    const hPassword = new Password(nPassword).hash()
-    const user = await userModel.findOneAndUpdate({ Email: codeVerify.email }, { password: hPassword })
-    return res.json({ message: "resst password succesfull", user })
-})
+    Jwt.verify(otp, process.env.SIGNTURE, async (err, decode) => {
+        if (decode) {
+            console.log(decode);
+
+            if (decode.otp != code) return next(new AppError("invalid code", 401))
+            const hash = bcrypt.hashSync(newPassword, +process.env.SALT_ROUNDS)
+            const user = await userModel.findOneAndUpdate({ Email: decode.email }, { password: hash })
+            return res.json({ message: "success", user })
+        }
+        return next(err)
+    })
+
+}
 /////////////////////////////////////////////////////////////log out
-export const logOut = errorHanddling(async (req, res, next) => {
+export const logOut = async (req, res, next) => {
     const { _id } = req.user
     const user = await userModel.findByIdAndUpdate(_id, { isLoggedIn: false })
     if (!user) return next(new Error('fail'))
     return res.json({ message: "logOut" })
-})
+}
 
 
 

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export const sendEmail = async ({ to = '', html = '', subject = '' }) => {
+export const sendEmail = async (option) => {
   let transporter = nodemailer.createTransport({
     host: "localhost",
     port: 587,
@@ -14,10 +14,10 @@ export const sendEmail = async ({ to = '', html = '', subject = '' }) => {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: 'youssefDot', // sender address
-    to, // list of receivers
-    subject, // Subject line
+    to: option.to, // list of receivers
+    subject: option.subject, // Subject line
     // text: "Hello world?", // plain text body
-    html  // html body
+    html: option.html  // html body
   });
 
   if (info.accepted.length) {
