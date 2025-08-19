@@ -53,10 +53,12 @@ export const logIn = async (req, res, next) => {
 
 export const forgetPassword = async (req, res, next) => {
     const { Email } = req.body
-    const user = await userModel.findOne({ Email,confirmed:true })
-    if (!user) return next(new Error('email not exist'))
+    const user = await userModel.findOne({ Email, confirmed: true })
+    if (!user) return next(new Error('email not exist or not confirmed'))
     const otp = OtpGenerator()
-    const payloadCode = Jwt.sign({ otp, email: user.Email }, process.env.SIGNTURE, { expiresIn: "3m" })
+    user.otpCode = otp
+    await user.save()
+    const payloadCode = Jwt.sign({ email: user.Email }, process.env.SIGNTURE, { expiresIn: "15m" })
     const sentEmail = await sendEmail({
         to: Email,
         html: htmlR(otp)
@@ -67,17 +69,16 @@ export const forgetPassword = async (req, res, next) => {
 }
 //////////////////////////////////////////////////////////////resetPassword
 export const changePassword = async (req, res, next) => {
-    const { otp } = req.params
+    const { token } = req.params
     const { newPassword } = req.body
     const { code } = req.body
-    Jwt.verify(otp, process.env.SIGNTURE, async (err, decode) => {
+    Jwt.verify(token, process.env.SIGNTURE, async (err, decode) => {
         if (decode) {
-            console.log(decode);
-
-            if (decode.otp != code) return next(new AppError("invalid code", 401))
+            const user = await userModel.findOne({ Email: decode.email })
+            if (code !== user.otpCode) return next(new AppError("invalid code", 401))
             const hash = bcrypt.hashSync(newPassword, +process.env.SALT_ROUNDS)
-            const user = await userModel.findOneAndUpdate({ Email: decode.email }, { password: hash })
-            return res.json({ message: "success", user })
+            await userModel.findOneAndUpdate({ Email: decode.email }, { $unset: { otpCode: "" }, password: hash })
+            return res.json({ message: "success" })
         }
         if (err.name === "TokenExpiredError") return next(new AppError("Time Expired", 400))
         return next(err)

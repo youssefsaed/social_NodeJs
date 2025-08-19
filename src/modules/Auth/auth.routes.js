@@ -25,7 +25,7 @@ router.post('/forgetPassword',validation(forgetPasswordSchema),errorHanddling( a
 
 //////////////////////////////////////////////////////////////////////////////////////////////////router reset password
 
-router.post('/changepassword/:otp',validation(resetPasswordSchema),errorHanddling( auth_Controller.changePassword))
+router.post('/changepassword/:token',validation(resetPasswordSchema),errorHanddling( auth_Controller.changePassword))
 
 ////////////////////////////////////////////////////////////router log out
 

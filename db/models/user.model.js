@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    isLoggedIn:Boolean
+    isLoggedIn:Boolean,
+    otpCode:String
 }, { timestamps: true })
 
 userSchema.pre('save',function(){

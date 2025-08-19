@@ -26,7 +26,7 @@ export const resetPasswordSchema = Joi.object().required().keys({
     code: Joi.string().length(6).required(),
     newPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{5,40}$')).required(),
     confirmPassword: Joi.string().valid(Joi.ref('newPassword')).required(),
-    otp:Joi.string().required()
+    token:Joi.string().required()
 })
 
 
