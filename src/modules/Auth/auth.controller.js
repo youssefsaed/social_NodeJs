@@ -34,7 +34,8 @@ export const confirmEmail = async (req, res, next) => {
     const decode = Jwt.verify(token, process.env.SIGNTURE)
     const updated = await userModel.findOneAndUpdate({ _id: decode.id, confirmed: false }, { confirmed: true })
     if (!updated) return next(new Error("you already confirme"))
-    return res.status(200).json({ message: "success" })
+    return res.redirect(`http://localhost:3000/confirmed`)
+    // return res.status(200).json({ message: "success" })
 }
 ////////////////////////////////////////////////////////////////logIn
 export const logIn = async (req, res, next) => {
