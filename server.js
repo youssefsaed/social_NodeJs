@@ -19,7 +19,7 @@ app.use(cors())
 
 //endPoint
 app.use(express.json())
-app.use(`${BaseUrl}/uploads`, express.static('./uploads'))
+app.use(`${BaseUrl}/uploads`, express.static('uploads'))
 app.use(`${BaseUrl}`, authRouter)
 app.use(`${BaseUrl}`, userRouter)
 app.use(`${BaseUrl}`, postesRouter)
