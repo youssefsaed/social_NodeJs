@@ -20,7 +20,7 @@ commentRouter.post(
 )
 ///////////////////////////////////////////////////////////////////////router update comment
 commentRouter.put(
-    '/updateComment',
+    '/updateComment/:id',
     Auth(),
     fileUpload(fileValidation.image).single('commentImage'),
     validation(updateCommentSchema),
@@ -28,7 +28,7 @@ commentRouter.put(
 )
 ///////////////////////////////////////////////////////////////////////router delete comment
 
-commentRouter.delete('/deleteComment',validation(deleteCommentSchema),Auth(),comment_Controller.deleteComment)
+commentRouter.delete('/deleteComment/:id',validation(deleteCommentSchema),Auth(),comment_Controller.deleteComment)
 
 
 

@@ -35,7 +35,7 @@ export const getPostWithComments = errorHanddling(async (req, res, next) => {
 ///////////////////////////////////////////////////////////
 export const updateComment = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
-    const { id } = req.query
+    const { id } = req.params
     const { commentCaption } = req.body
     const cheackComment = await commentModel.findOne({ _id: id, commentBy: _id })
     if (!cheackComment) return next(new AppError('comment not found', 404))
@@ -49,7 +49,7 @@ export const updateComment = errorHanddling(async (req, res, next) => {
 ///////////////////////////////////////////////////////////////////////delete comment
 export const deleteComment = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
-    const { id } = req.query
+    const { id } = req.params
     const comment = await commentModel.findOneAndDelete({ _id: id, commentBy: _id })
     if (!comment) return next(new AppError('comment not found', 404))
     const post = await postModel.findOneAndUpdate({ comentes: { $in: [id] } }, {
