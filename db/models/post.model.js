@@ -31,5 +31,7 @@ const postSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-
+postSchema.post('init', function (doc) {
+    doc.image.map(elm => elm.filename = 'https://socialnodejs-production.up.railway.app/social/uploads/' + elm.filename)
+})
 export const postModel = mongoose.model('post', postSchema)
