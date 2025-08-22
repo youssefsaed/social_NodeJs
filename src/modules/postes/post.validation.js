@@ -5,29 +5,22 @@ export const addPostSchema = Joi.object().required().keys({
 })
 
 /////////////////////////////////////validation update post status
-export const updateStatusSchema = {
-    query: Joi.object().required().keys({
-        id: Joi.string().hex().length(24).required()
-    })
-}
+export const updateStatusSchema = Joi.object().required().keys({
+    id: Joi.string().hex().length(24).required()
+})
+
 /////////////////////////////////////validation update post 
-export const updatePostSchema = {
-    body: Joi.object().keys({
-        caption: Joi.string()
-    }),
-    query: Joi.object().required().keys({
-        id: Joi.string().hex().length(24).required()
-    })
-}
+export const updatePostSchema = Joi.object().keys({
+    caption: Joi.string(),
+    id: Joi.string().hex().length(24).required()
+})
+
 ////////////////////////////////////////validation delete post
-export const deletePostSchema = {
-    query: Joi.object().required().keys({
-        id: Joi.string().hex().length(24).required()
-    })
-}
+export const deletePostSchema = Joi.object().required().keys({
+    id: Joi.string().hex().length(24).required()
+})
+
 ////////////////////////////////////////validation like and unlike
-export const likeAunlikeSchema = {
-    query: Joi.object().required().keys({
-        id: Joi.string().hex().length(24).required()
-    })
-}
+export const likeAunlikeSchema = Joi.object().required().keys({
+    id: Joi.string().hex().length(24).required()
+})
