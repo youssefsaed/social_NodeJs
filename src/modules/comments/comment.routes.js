@@ -12,7 +12,7 @@ const router = Router()
 
 ///////////////////////////////////////////////////////////////////////router add comment
 router.post(
-    '/addComment',
+    '/addComment:/id',
     Auth(),
     fileUpload(fileValidation.image).single('commentImage'),
     validation(addCommentSchema),

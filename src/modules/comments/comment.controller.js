@@ -5,7 +5,7 @@ import { errorHanddling } from "../../utils/errorHandling.js";
 ///////////////////////////////////////////////////////////////////////add comment
 export const addComment = errorHanddling(async (req, res, next) => {
     const { commentCaption } = req.body
-    const { id } = req.query
+    const { id } = req.params
     const { _id } = req.user
     const cheackPost = await postModel.findById(id)
     if (!cheackPost) return next(new Error('fail', { cause: 404 }))
