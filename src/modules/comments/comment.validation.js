@@ -8,8 +8,7 @@ export const addCommentSchema = Joi.object().required().keys({
 
 
 /////////////////////////////////////////validation update comment
-export const updateCommentSchema =
-    Joi.object().keys({
+export const updateCommentSchema =Joi.object().keys({
         commentCaption: Joi.string(),
         id: Joi.string().hex().length(24).required()
     })
@@ -20,4 +19,8 @@ export const updateCommentSchema =
 /////////////////////////////////////////validation delete comment
 export const deleteCommentSchema = Joi.object().required().keys({
     id: Joi.string().hex().length(24).required()
+})
+
+export const getCommentSchema = Joi.object().required().keys({
+    postid: Joi.string().hex().length(24).required()
 })

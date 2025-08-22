@@ -4,13 +4,14 @@ import { fileUpload, fileValidation } from "../../utils/fileUpload.js";
 import { validation } from "../../../middleware/validation.js";
 import { addPostSchema, deletePostSchema, likeAunlikeSchema, updatePostSchema, updateStatusSchema } from "./post.validation.js";
 import * as post_Controller from './post.controller.js'
+import commentRouter from "../comments/comment.routes.js";
 
 
 const router = Router()
 
 
 
-
+router.use('/:postid/comments',commentRouter)
 ///////////////////////////////////////////////////////////////////router add post
 router.post(
     '/addPost',

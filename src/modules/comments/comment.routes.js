@@ -3,15 +3,15 @@ import { Auth } from "../../../middleware/authorization.js";
 import { fileUpload, fileValidation } from "../../utils/fileUpload.js";
 import * as comment_Controller from './comment.controller.js'
 import { validation } from "../../../middleware/validation.js";
-import { addCommentSchema, deleteCommentSchema, updateCommentSchema } from "./comment.validation.js";
-const router = Router()
+import { addCommentSchema, deleteCommentSchema, getCommentSchema, updateCommentSchema } from "./comment.validation.js";
+const commentRouter = Router({mergeParams:true})
 
 
 
 
-
+commentRouter.get('/',validation(getCommentSchema),comment_Controller.getPostWithComments)
 ///////////////////////////////////////////////////////////////////////router add comment
-router.post(
+commentRouter.post(
     '/addComment/:id',
     Auth(),
     fileUpload(fileValidation.image).single('commentImage'),
@@ -19,7 +19,7 @@ router.post(
     comment_Controller.addComment
 )
 ///////////////////////////////////////////////////////////////////////router update comment
-router.put(
+commentRouter.put(
     '/updateComment',
     Auth(),
     fileUpload(fileValidation.image).single('commentImage'),
@@ -28,7 +28,7 @@ router.put(
 )
 ///////////////////////////////////////////////////////////////////////router delete comment
 
-router.delete('/deleteComment',validation(deleteCommentSchema),Auth(),comment_Controller.deleteComment)
+commentRouter.delete('/deleteComment',validation(deleteCommentSchema),Auth(),comment_Controller.deleteComment)
 
 
 
@@ -40,4 +40,4 @@ router.delete('/deleteComment',validation(deleteCommentSchema),Auth(),comment_Co
 
 
 
-export default router
+export default commentRouter
