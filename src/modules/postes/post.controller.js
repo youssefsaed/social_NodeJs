@@ -63,7 +63,7 @@ export const getPostwUser = errorHanddling(async (req, res, next) => {
 })
 //////////////////////////////////////////////////////////////////get all postes
 export const getAllPostes = errorHanddling(async (req, res, next) => {
-    const postes = await postModel.find().populate([
+    const postes = await postModel.find({status:'public'}).populate([
         {
             path: 'createdBy',
             select: 'Username profilPicture',
