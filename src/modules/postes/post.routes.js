@@ -15,7 +15,7 @@ const router = Router()
 router.post(
     '/addPost',
     Auth(),
-    fileUpload(fileValidation.image).array('imageCaption', 5),
+    fileUpload(fileValidation.image).single('imageCaption'),
     validation(addPostSchema),
     post_Controller.addPost
 )

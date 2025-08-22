@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
     caption: String,
-    image: Array,
+    image: Object,
     status: {
         type: String,
         enum: ['public', 'private'],
@@ -32,6 +32,6 @@ const postSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 postSchema.post('init', function (doc) {
-    doc.image.map(elm => elm.filename = 'https://socialnodejs-production.up.railway.app/social/uploads/' + elm.filename)
+    doc.image.filename= 'https://socialnodejs-production.up.railway.app/social/uploads/' + doc.image.filename
 })
 export const postModel = mongoose.model('post', postSchema)

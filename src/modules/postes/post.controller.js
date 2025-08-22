@@ -5,7 +5,9 @@ import { errorHanddling } from "../../utils/errorHandling.js";
 export const addPost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const { caption } = req.body
-    const post = await postModel.create({ caption, createdBy: _id, image: req.files })
+    
+    
+    const post = await postModel.create({ caption, createdBy: _id, image: req.file })
     return res.status(201).json({ message: "success", post })
 })
 ///////////////////////////////////////////////////////////////////////update post status to private
