@@ -28,7 +28,7 @@ export const addComment = errorHanddling(async (req, res, next) => {
 ///////////////////////////////////////////////////////////////////////update comment
 export const getPostWithComments = errorHanddling(async (req, res, next) => {
     if (!await postModel.findById(req.params.postid)) return next(new AppError('post not found', 404))
-    const comments = await commentModel.find({ postId: req.params.postid })
+    const comments = await commentModel.find({ postId: req.params.postid }).populate('commentBy','Username profilPicture')
     res.json({ message: 'success', comments })
 })
 
