@@ -7,7 +7,7 @@ export const addPost = errorHanddling(async (req, res, next) => {
     const { caption } = req.body
     
     
-    const post = await postModel.create({ caption, createdBy: _id, image: req.file })
+    const post = await postModel.create({ caption, createdBy: _id, image: req.file?.filename })
     return res.status(201).json({ message: "success", post })
 })
 ///////////////////////////////////////////////////////////////////////update post status to private
@@ -26,7 +26,7 @@ export const updatePost = errorHanddling(async (req, res, next) => {
     const { id } = req.query
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
     if (!cheackPost) return next(new Error('fail', { cause: 404 }))
-    await postModel.findOneAndUpdate({ createdBy: _id, _id: id }, { caption, image: req.files })
+    await postModel.findOneAndUpdate({ createdBy: _id, _id: id }, { caption, image: req.file?.filename })
     return res.status(201).json({ message: "success" })
 })
 //////////////////////////////////////////////////////////////////////delete post

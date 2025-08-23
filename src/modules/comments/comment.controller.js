@@ -14,8 +14,9 @@ export const addComment = errorHanddling(async (req, res, next) => {
         commentCaption,
         postId: id,
         commentBy: _id,
-        commentImage: req.file
+        commentImage: req.file?.filename
     })
+    
     const post = await postModel.findOneAndUpdate({ _id: id }, {
         $push: {
             comentes: comment._id
