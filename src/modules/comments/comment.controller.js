@@ -43,10 +43,15 @@ export const updateComment = errorHanddling(async (req, res, next) => {
     const { commentCaption } = req.body
     const cheackComment = await commentModel.findOne({ _id: id, commentBy: _id })
     if (!cheackComment) return next(new AppError('comment not found', 404))
-    const comment = await commentModel.findOneAndUpdate({ _id: id, commentBy: _id }, {
+    const commentData = {
         commentCaption,
-        commentImage: req.file?.filename
-    })
+    }
+
+    if (req.file?.filename) {
+        commentData.commentImage = req.file?.filename
+    }
+
+    const comment = await commentModel.findOneAndUpdate({ _id: id, commentBy: _id }, commentData)
     if (!comment) return next(new AppError('fail', 400))
     return res.status(201).json({ message: "success" })
 })
