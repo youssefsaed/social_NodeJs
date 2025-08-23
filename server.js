@@ -37,7 +37,7 @@ app.all('*', (req, res, next) => {
 
 //global error handdling
 app.use((err,req,res,next)=>{
-    res.status(err.status||500).json({"Error":err.message})
+    res.status(err.status||500).json({"Error":err.message,stack:err.stack})
 })
 
 // app.use(globalError)

@@ -5,9 +5,16 @@ import { errorHanddling } from "../../utils/errorHandling.js";
 export const addPost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const { caption } = req.body
-    
-    
-    const post = await postModel.create({ caption, createdBy: _id, image: req.file?.filename })
+    const postData = {
+        caption,
+        createdBy: _id
+    }
+
+    if (req.file) {
+        postData.image = req.file.filename
+    }
+
+    const post = await postModel.create(postData)
     return res.status(201).json({ message: "success", post })
 })
 ///////////////////////////////////////////////////////////////////////update post status to private
@@ -24,9 +31,16 @@ export const updatePost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const { caption } = req.body
     const { id } = req.query
+    const postData = {
+        caption
+    }
+
+    if (req.file) {
+        postData.image = req.file.filename
+    }
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
     if (!cheackPost) return next(new Error('fail', { cause: 404 }))
-    await postModel.findOneAndUpdate({ createdBy: _id, _id: id }, { caption, image: req.file?.filename })
+    await postModel.findOneAndUpdate({ createdBy: _id, _id: id }, postData)
     return res.status(201).json({ message: "success" })
 })
 //////////////////////////////////////////////////////////////////////delete post
@@ -63,7 +77,7 @@ export const getPostwUser = errorHanddling(async (req, res, next) => {
 })
 //////////////////////////////////////////////////////////////////get all postes
 export const getAllPostes = errorHanddling(async (req, res, next) => {
-    const postes = await postModel.find({status:'public'}).populate([
+    const postes = await postModel.find({ status: 'public' }).populate([
         {
             path: 'createdBy',
             select: 'Username profilPicture',

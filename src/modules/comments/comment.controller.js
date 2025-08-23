@@ -10,13 +10,15 @@ export const addComment = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const cheackPost = await postModel.findById(id)
     if (!cheackPost) return next(new AppError('fail', 404))
-    const comment = await commentModel.create({
+    const commentData = {
         commentCaption,
         postId: id,
         commentBy: _id,
-        commentImage: req.file?.filename
-    })
-    
+    }
+    if (req.file) {
+        commentData.commentImage = req.file.filename
+    }
+    const comment = await commentModel.create(commentData)
     const post = await postModel.findOneAndUpdate({ _id: id }, {
         $push: {
             comentes: comment._id
@@ -24,12 +26,12 @@ export const addComment = errorHanddling(async (req, res, next) => {
     }, { new: true })
     post.totalComentes = post.comentes.length
     await post.save()
-    return res.status(201).json({ message: "success" })
+    return res.status(201).json({ message: "success",comment })
 })
 ///////////////////////////////////////////////////////////////////////update comment
 export const getPostWithComments = errorHanddling(async (req, res, next) => {
     if (!await postModel.findById(req.params.postid)) return next(new AppError('post not found', 404))
-    const comments = await commentModel.find({ postId: req.params.postid }).populate('commentBy','Username profilPicture')
+    const comments = await commentModel.find({ postId: req.params.postid }).populate('commentBy', 'Username profilPicture')
     res.json({ message: 'success', comments })
 })
 
