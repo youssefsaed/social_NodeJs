@@ -35,8 +35,8 @@ export const updatePost = errorHanddling(async (req, res, next) => {
         caption
     }
 
-    if (req.file) {
-        postData.image = req.file.filename
+    if (req.file?.filename) {
+        postData.image = req.file?.filename
     }
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
     if (!cheackPost) return next(new Error('fail', { cause: 404 }))

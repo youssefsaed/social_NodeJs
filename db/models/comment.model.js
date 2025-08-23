@@ -16,6 +16,8 @@ const commentSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 commentSchema.post('init', function (doc) {
-    doc.commentImage = `${process.env.BaseUrl}/social/uploads/` + doc.commentImage
+    if (doc.commentImage) {
+        doc.commentImage = `${process.env.BaseUrl}/social/uploads/` + doc.commentImage
+    }
 })
 export const commentModel = mongoose.model('comment', commentSchema)

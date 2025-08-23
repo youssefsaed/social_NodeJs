@@ -15,8 +15,9 @@ export const addComment = errorHanddling(async (req, res, next) => {
         postId: id,
         commentBy: _id,
     }
-    if (req.file) {
-        commentData.commentImage = req.file.filename
+
+    if (req.file?.filename) {
+        commentData.commentImage = req.file?.filename
     }
     const comment = await commentModel.create(commentData)
     const post = await postModel.findOneAndUpdate({ _id: id }, {
@@ -26,7 +27,7 @@ export const addComment = errorHanddling(async (req, res, next) => {
     }, { new: true })
     post.totalComentes = post.comentes.length
     await post.save()
-    return res.status(201).json({ message: "success",comment })
+    return res.status(201).json({ message: "success", comment })
 })
 ///////////////////////////////////////////////////////////////////////update comment
 export const getPostWithComments = errorHanddling(async (req, res, next) => {

@@ -32,6 +32,8 @@ const postSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 postSchema.pre('init', function (doc) {
-    doc.image = `${process.env.BaseUrl}/social/uploads/`+doc.image 
+    if (doc.image) {
+        doc.image = `${process.env.BaseUrl}/social/uploads/` + doc.image
+    }
 })
 export const postModel = mongoose.model('post', postSchema)
