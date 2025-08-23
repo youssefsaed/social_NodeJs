@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
     caption: String,
-    image: Object,
+    image: String,
     status: {
         type: String,
         enum: ['public', 'private'],
