@@ -11,9 +11,11 @@ const commentSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user'
     },
-  
+
 
 }, { timestamps: true })
 
-
+commentSchema.post('init', function (doc) {
+    doc.commentImage = `${process.env.BaseUrl}/social/uploads/` + doc.commentImage
+})
 export const commentModel = mongoose.model('comment', commentSchema)

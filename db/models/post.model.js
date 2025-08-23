@@ -32,6 +32,6 @@ const postSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 postSchema.post('init', function (doc) {
-    doc.image.filename= 'https://socialnodejs-production.up.railway.app/social/uploads/' + doc.image.filename
+    doc.image.filename = `${process.env.BaseUrl}/social/uploads/` + doc.image.filename
 })
 export const postModel = mongoose.model('post', postSchema)
