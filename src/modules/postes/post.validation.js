@@ -1,7 +1,7 @@
 import Joi from "joi";
 /////////////////////////////////////validation add post
 export const addPostSchema = Joi.object().required().keys({
-    caption: Joi.string().required()
+    caption: Joi.string().trim()
 })
 
 /////////////////////////////////////validation update post status

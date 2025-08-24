@@ -2,7 +2,7 @@ import Joi from "joi";
 
 //////////////////////////////////////////validation add comment
 export const addCommentSchema = Joi.object().required().keys({
-    commentCaption: Joi.string().required(),
+    commentCaption: Joi.string().trim(),
     id: Joi.string().hex().length(24).required()
 })
 
