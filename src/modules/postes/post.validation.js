@@ -1,7 +1,9 @@
 import Joi from "joi";
 /////////////////////////////////////validation add post
 export const addPostSchema = Joi.object().keys({
-    caption: Joi.string().trim()
+    caption: Joi.string().trim().messages({
+       "string.empty": "caption is not allowed to be empty",
+    })
 })
 
 /////////////////////////////////////validation update post status
