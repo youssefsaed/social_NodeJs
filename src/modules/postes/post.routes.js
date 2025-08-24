@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Auth } from "../../../middleware/authorization.js";
 import { fileUpload, fileValidation } from "../../utils/fileUpload.js";
 import { validation } from "../../../middleware/validation.js";
-import { addPostSchema, deletePostSchema, likeAunlikeSchema, updatePostSchema, updateStatusSchema } from "./post.validation.js";
+import { addPostSchema, likeAunlikeSchema, postSchema, updatePostSchema, updateStatusSchema } from "./post.validation.js";
 import * as post_Controller from './post.controller.js'
 import commentRouter from "../comments/comment.routes.js";
 
@@ -34,7 +34,7 @@ router.put(
 )
 //////////////////////////////////////////////////////////////////////router delet post
 
-router.delete('/deletePost', validation(deletePostSchema), Auth(), post_Controller.deletePost)
+router.delete('/deletePost', validation(postSchema), Auth(), post_Controller.deletePost)
 
 //////////////////////////////////////////////////////////////////////get post with user
 
@@ -43,6 +43,10 @@ router.get('/getPostwUser', Auth(), post_Controller.getPostwUser)
 //////////////////////////////////////////////////////////////////////get all post 
 
 router.get('/getAllPostes', post_Controller.getAllPostes)
+
+//////////////////////////////////////////////////////////////////////get post 
+
+router.get('/getPost/:id', validation(postSchema), post_Controller.getPost)
 
 //////////////////////////////////////////////////////////////////////like and unlike in one api
 

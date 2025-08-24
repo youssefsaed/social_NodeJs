@@ -16,7 +16,7 @@ export const updatePostSchema = Joi.object().keys({
 })
 
 ////////////////////////////////////////validation delete post
-export const deletePostSchema = Joi.object().required().keys({
+export const postSchema = Joi.object().required().keys({
     id: Joi.string().hex().length(24).required()
 })
 

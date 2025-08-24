@@ -97,6 +97,28 @@ export const getAllPostes = errorHanddling(async (req, res, next) => {
     ])
     return res.status(200).json({ message: "success", postes })
 })
+////////////////////////////////////////get post
+export const getPost = errorHanddling(async (req, res, next) => {
+    const post = await postModel.findById(req.params.id).populate([
+        {
+            path: 'createdBy',
+            select: 'Username profilPicture',
+        },
+        {
+            path: 'comentes',
+            select: 'commentImage commentCaption',
+            populate: {
+                path: 'commentBy',
+                select: 'Username profilPicture'
+            }
+        },
+        {
+            path: 'likes',
+            select: 'Username profilPicture'
+        }
+    ])
+    return res.status(200).json({ message: "success", post })
+})
 /////////////////////////////////////////////////////////////////////like and unlike in one api
 export const likeAunlike = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
