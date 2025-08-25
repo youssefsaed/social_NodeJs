@@ -5,7 +5,7 @@ export const addPostSchema = Joi.object().keys({
 })
 
 /////////////////////////////////////validation update post status
-export const updateStatusSchema = Joi.object().required().keys({
+export const updateStatusSchema = Joi.object().keys({
     id: Joi.string().hex().length(24).required()
 })
 
