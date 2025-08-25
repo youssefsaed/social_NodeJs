@@ -50,7 +50,7 @@ router.get('/getPost/:id', validation(postSchema), post_Controller.getPost)
 
 //////////////////////////////////////////////////////////////////////like and unlike in one api
 
-router.post('/likeAunlike/:id', Auth(), validation(likeAunlikeSchema), post_Controller.likeAunlike)
+router.get('/likeAunlike/:id', Auth(), validation(likeAunlikeSchema), post_Controller.likeAunlike)
 
 
 
