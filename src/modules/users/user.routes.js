@@ -6,6 +6,8 @@ import { updateFnameSchema, updateLnameSchema, updatepasswordSchema, updateUname
 import { fileUpload, fileValidation } from "../../utils/fileUpload.js";
 const router = Router()
 
+/////////////////////////////////////////////////////////////////////get logged user
+router.get('/getuser', Auth(), user_Controller.getUser)
 ///////////////////////////////////////////////////////////////////////////////////////////router update user
 
 router.put('/updateUser', validation(updateUserSchema), Auth(), user_Controller.updateUser)

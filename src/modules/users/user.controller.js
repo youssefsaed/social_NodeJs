@@ -2,7 +2,12 @@ import { userModel } from "../../../db/models/user.model.js";
 import AppError from "../../utils/AppError.js";
 import { errorHanddling } from "../../utils/errorHandling.js";
 import bcrypt from 'bcryptjs'
-
+/////////////////////////////////////////////////////////////////////////get loged user
+export const getUser = errorHanddling(async (req, res, next) => {
+    const { _id } = req.user
+    const user = await userModel.findById(_id).select('-password')
+    return res.json({ message: "success", user })
+})
 //////////////////////////////////////////////////////////////////////////update user
 export const updateUser = errorHanddling(async (req, res, next) => {
     const { FirstName, LastName, Username } = req.body
