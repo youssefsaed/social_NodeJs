@@ -1,4 +1,5 @@
 import { postModel } from "../../../db/models/post.model.js";
+import AppError from "../../utils/AppError.js";
 import { errorHanddling } from "../../utils/errorHandling.js";
 
 ////////////////////////////////////////////////////////////////////////add post
@@ -39,7 +40,7 @@ export const updatePost = errorHanddling(async (req, res, next) => {
         postData.image = req.file?.filename
     }
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
-    if (!cheackPost) return next(new Error('fail', { cause: 404 }))
+    if (!cheackPost) return next(new AppError('post not found', 404 ))
     await postModel.findOneAndUpdate({ createdBy: _id, _id: id }, postData)
     return res.status(201).json({ message: "success" })
 })
@@ -48,7 +49,7 @@ export const deletePost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const { id } = req.query
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
-    if (!cheackPost) return next(new Error('fail', { cause: 404 }))
+    if (!cheackPost) return next(new AppError('post not found', 404 ))
     await postModel.findOneAndDelete({ createdBy: _id, _id: id })
     return res.status(200).json({ message: "success" })
 })
@@ -122,9 +123,9 @@ export const getPost = errorHanddling(async (req, res, next) => {
 /////////////////////////////////////////////////////////////////////like and unlike in one api
 export const likeAunlike = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
-    const { id } = req.query
+    const { id } = req.params
     const cheackPost = await postModel.findById(id)
-    if (!cheackPost) return next(new Error('fail', { cause: 404 }))
+    if (!cheackPost) return next(new AppError('post not found',  404 ))
     const likeCheck = await postModel.findOne({ likes: { $in: [_id] }, _id: id })
     if (likeCheck) {
         const post = await postModel.findOneAndUpdate({ _id: id }, {
