@@ -11,7 +11,7 @@ export const updateStatusSchema = Joi.object().keys({
 
 /////////////////////////////////////validation update post 
 export const updatePostSchema = Joi.object().keys({
-    caption: Joi.string(),
+    caption: Joi.string().allow('').trim(),
     id: Joi.string().hex().length(24).required()
 })
 
