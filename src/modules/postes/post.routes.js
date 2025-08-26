@@ -28,7 +28,7 @@ router.patch('/updateStatus', validation(updateStatusSchema), Auth(), post_Contr
 router.put(
     '/updatePost/:id',
     Auth(),
-    fileUpload(fileValidation.image).array('imageCaption', 5),
+    fileUpload(fileValidation.image).single('imageCaption'),
     validation(updatePostSchema),
     post_Controller.updatePost
 )
