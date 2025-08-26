@@ -31,7 +31,7 @@ export const updateStatus = errorHanddling(async (req, res, next) => {
 export const updatePost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
     const { caption } = req.body
-    const { id } = req.query
+    const { id } = req.params
     const postData = {
         caption
     }
@@ -47,7 +47,7 @@ export const updatePost = errorHanddling(async (req, res, next) => {
 //////////////////////////////////////////////////////////////////////delete post
 export const deletePost = errorHanddling(async (req, res, next) => {
     const { _id } = req.user
-    const { id } = req.query
+    const { id } = req.params
     const cheackPost = await postModel.findOne({ createdBy: _id, _id: id })
     if (!cheackPost) return next(new AppError('post not found', 404 ))
     await postModel.findOneAndDelete({ createdBy: _id, _id: id })

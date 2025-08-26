@@ -26,7 +26,7 @@ router.patch('/updateStatus', validation(updateStatusSchema), Auth(), post_Contr
 
 ///////////////////////////////////////////////////////////////////router update post
 router.put(
-    '/updatePost',
+    '/updatePost/:id',
     Auth(),
     fileUpload(fileValidation.image).array('imageCaption', 5),
     validation(updatePostSchema),
@@ -34,7 +34,7 @@ router.put(
 )
 //////////////////////////////////////////////////////////////////////router delet post
 
-router.delete('/deletePost', validation(postSchema), Auth(), post_Controller.deletePost)
+router.delete('/deletePost/:id', validation(postSchema), Auth(), post_Controller.deletePost)
 
 //////////////////////////////////////////////////////////////////////get post with user
 

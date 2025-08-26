@@ -45,13 +45,6 @@ app.use((err,req,res,next)=>{
 
 
 
-
-
-
-
-
-
-
 //connection
 dBConnection()
 app.listen(process.env.PORT || port, () => {
