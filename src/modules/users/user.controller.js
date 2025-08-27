@@ -44,7 +44,7 @@ export const updatepassword = errorHanddling(async (req, res, next) => {
     
     const check = bcrypt.compareSync(oldPassword,user.password)
     if (!check) return next(new AppError("incorect password", 400))
-    const npassword = bcrypt.hashSync(newPassword, process.env.SALT_ROUNDS)
+    const npassword = bcrypt.hashSync(newPassword, +process.env.SALT_ROUNDS)
     await userModel.updateOne({ _id }, { password: npassword })
     return res.json({ message: "success" })
 
