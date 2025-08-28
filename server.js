@@ -12,11 +12,20 @@ import cors from 'cors'
 dotenv.config()
 
 const app = express()
-const port = 3000 
+const port = 3001 
 const BaseUrl = '/social'
+
+
 app.use(cors({
-    origin:"*"
-}))
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.options("*", cors());
+// app.use(cors({
+//     origin:"*"
+// }))
 
 
 //endPoint
