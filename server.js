@@ -12,7 +12,7 @@ import cors from 'cors'
 dotenv.config()
 
 const app = express()
-const port = 3000 || 5000
+const port = 3000 
 const BaseUrl = '/social'
 app.use(cors())
 

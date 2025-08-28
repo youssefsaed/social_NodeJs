@@ -55,7 +55,7 @@ export const logIn = async (req, res, next) => {
 export const forgetPassword = async (req, res, next) => {
     const { Email } = req.body
     const user = await userModel.findOne({ Email, confirmed: true })
-    if (!user) return next(new AppError('email not exist or not confirmed',400))
+    if (!user) return next(new AppError('email not exist or not confirmed', 400))
     const otp = OtpGenerator()
     user.otpCode = otp
     await user.save()
@@ -66,6 +66,7 @@ export const forgetPassword = async (req, res, next) => {
         subject: "reset password"
     })
     if (sentEmail) return res.json({ message: "success", payloadCode })
+    return res.json({ message: "fail" })
 }
 //////////////////////////////////////////////////////////////resetPassword
 export const resetPassword = async (req, res, next) => {
