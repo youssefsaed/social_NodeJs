@@ -12,7 +12,6 @@ export const fileUpload = (customValidation = []) => {
             cb(null, 'uploads/')
         },
         filename: (req, file, cb) => {
-            console.log(file);
             cb(null, uuidv4() + '-' + file.originalname)
         }
     })
